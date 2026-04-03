@@ -86,7 +86,7 @@ const styles = {
         width: '40px',
         height: '40px',
         border: '3px solid #e9ecef',
-        borderTop: '3px solid '#0d47a1',
+        borderTop: '3px solid #0d47a1',
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
     },
