@@ -1,6 +1,8 @@
 export default function Home() {
     const handleLogin = () => {
-        window.location.href = process.env.NEXT_PUBLIC_DISCORD_OAUTH_URL;
+        const discordAuthUrl = process.env.NEXT_PUBLIC_DISCORD_OAUTH_URL ||
+            `https://discord.com/api/oauth2/authorize?client_id=1441374733009682433&redirect_uri=${encodeURIComponent('https://miraweb-jade.vercel.app/api/auth/callback')}&response_type=code&scope=identify`;
+        window.location.href = discordAuthUrl;
     };
 
     return (
