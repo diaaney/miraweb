@@ -52,7 +52,10 @@ export default function Setup() {
                 throw new Error(data.error || 'Failed to create profile');
             }
 
-            router.push('/success');
+            // Save user data to localStorage for persistent login
+            localStorage.setItem('mira_user', JSON.stringify(data.profile));
+
+            router.push('/dashboard');
 
         } catch (err) {
             setError(err.message);
@@ -162,7 +165,7 @@ export default function Setup() {
 const styles = {
     container: {
         minHeight: '100vh',
-        backgroundColor: '#0a0a0a',
+        backgroundColor: '#0a0e27',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         padding: '40px 20px',
         display: 'flex',
@@ -174,7 +177,7 @@ const styles = {
         width: '100%'
     },
     loadingText: {
-        color: '#666',
+        color: '#8b92b8',
         fontSize: '14px',
         letterSpacing: '0.5px'
     },
@@ -193,21 +196,22 @@ const styles = {
     },
     subtitle: {
         fontSize: '11px',
-        fontWeight: '600',
-        color: '#666',
+        fontWeight: '700',
+        color: '#5865f2',
         letterSpacing: '4px',
         margin: 0,
         textTransform: 'uppercase'
     },
     card: {
-        backgroundColor: '#141414',
-        border: '1px solid #1f1f1f',
-        borderRadius: '2px',
-        overflow: 'hidden'
+        backgroundColor: '#0f1535',
+        border: '1px solid #1a2142',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
     },
     cardHeader: {
         padding: '32px 40px',
-        borderBottom: '1px solid #1f1f1f'
+        borderBottom: '1px solid #1a2142'
     },
     cardTitle: {
         fontSize: '20px',
@@ -219,13 +223,13 @@ const styles = {
     },
     cardSubtitle: {
         fontSize: '13px',
-        color: '#888',
+        color: '#8b92b8',
         margin: 0,
         lineHeight: '1.6'
     },
     discordSection: {
         padding: '32px 40px',
-        borderBottom: '1px solid #1f1f1f'
+        borderBottom: '1px solid #1a2142'
     },
     discordInfo: {
         display: 'flex',
@@ -235,8 +239,8 @@ const styles = {
     avatar: {
         width: '64px',
         height: '64px',
-        borderRadius: '50%',
-        border: '2px solid #1f1f1f'
+        borderRadius: '12px',
+        border: '2px solid #1a2142'
     },
     discordDetails: {
         flex: 1
@@ -244,7 +248,7 @@ const styles = {
     discordLabel: {
         fontSize: '11px',
         fontWeight: '600',
-        color: '#666',
+        color: '#8b92b8',
         letterSpacing: '1px',
         textTransform: 'uppercase',
         marginBottom: '6px'
@@ -265,16 +269,16 @@ const styles = {
         display: 'block',
         fontSize: '11px',
         fontWeight: '600',
-        color: '#888',
+        color: '#8b92b8',
         letterSpacing: '1px',
         textTransform: 'uppercase',
         marginBottom: '12px'
     },
     input: {
         width: '100%',
-        backgroundColor: '#0a0a0a',
-        border: '1px solid #1f1f1f',
-        borderRadius: '2px',
+        backgroundColor: '#0a0e27',
+        border: '1px solid #1a2142',
+        borderRadius: '10px',
         padding: '14px 16px',
         color: '#ffffff',
         fontSize: '14px',
@@ -288,15 +292,15 @@ const styles = {
         backgroundColor: '#5865f2',
         color: '#ffffff',
         border: 'none',
-        borderRadius: '2px',
-        padding: '16px 32px',
+        borderRadius: '10px',
+        padding: '14px 28px',
         fontSize: '12px',
         fontWeight: '700',
-        letterSpacing: '1px',
+        letterSpacing: '0.5px',
         cursor: 'pointer',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.3s ease',
         textTransform: 'uppercase',
-        boxShadow: '0 4px 12px rgba(88, 101, 242, 0.3)',
+        boxShadow: '0 8px 24px rgba(88, 101, 242, 0.4)',
         marginTop: '8px'
     },
     buttonDisabled: {
@@ -321,13 +325,13 @@ const styles = {
     },
     infoSection: {
         padding: '32px 40px',
-        backgroundColor: '#0a0a0a',
-        borderTop: '1px solid #1f1f1f'
+        backgroundColor: '#0a0e27',
+        borderTop: '1px solid #1a2142'
     },
     infoTitle: {
         fontSize: '11px',
         fontWeight: '600',
-        color: '#666',
+        color: '#8b92b8',
         letterSpacing: '1px',
         textTransform: 'uppercase',
         marginBottom: '20px'
@@ -347,7 +351,7 @@ const styles = {
     },
     infoText: {
         fontSize: '13px',
-        color: '#888',
+        color: '#8b92b8',
         letterSpacing: '0.3px'
     }
 };
