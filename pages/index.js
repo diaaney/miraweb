@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { LogIn } from 'lucide-react';
 
 export default function Home() {
     const router = useRouter();
@@ -22,147 +23,57 @@ export default function Home() {
 
     if (isLoading) {
         return (
-            <div style={styles.loadingContainer}>
-                <div style={styles.spinner}></div>
+            <div className="min-h-screen bg-[#111111] flex items-center justify-center">
+                <div className="w-10 h-10 border-2 border-[#2a2a2a] border-t-zinc-500 rounded-full animate-spin"></div>
             </div>
         );
     }
 
     return (
-        <div style={styles.container}>
-            <div style={styles.content}>
-                <div style={styles.header}>
-                    <h1 style={styles.title}>MIRA</h1>
-                    <p style={styles.subtitle}>Profile System</p>
-                </div>
+        <div className="min-h-screen bg-[#111111] text-zinc-300 font-sans flex items-center justify-center px-8 selection:bg-zinc-800 selection:text-white">
+            <div className="w-full max-w-[500px] flex flex-col items-center text-center">
 
-                <div style={styles.main}>
-                    <h2 style={styles.heading}>Welcome</h2>
-                    <p style={styles.description}>
-                        Connect your Discord account to create your gaming profile
+                {/* Logo */}
+                <h1 className="font-serif text-6xl font-bold text-zinc-100 mb-4 tracking-tight">
+                    MIRA
+                </h1>
+                <p className="text-sm text-zinc-500 mb-12 tracking-wider font-medium">
+                    PROFILE SYSTEM
+                </p>
+
+                {/* Main Box */}
+                <div className="w-full rounded-2xl border border-[#2a2a2a] bg-[#161616] p-10 shadow-lg shadow-black/40 mb-8">
+                    <h2 className="font-serif text-2xl text-zinc-100 mb-3">Welcome</h2>
+                    <p className="text-sm text-zinc-400 leading-relaxed mb-8">
+                        Connect your Discord account to create your gaming profile with live stats and tracking.
                     </p>
 
-                    <button onClick={handleLogin} style={styles.button}>
+                    <button
+                        onClick={handleLogin}
+                        className="w-full bg-[#2a2a2a] hover:bg-[#333333] text-zinc-100 font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 group"
+                    >
+                        <LogIn size={18} className="text-zinc-400 group-hover:text-zinc-100 transition-colors" />
                         Login with Discord
                     </button>
+                </div>
 
-                    <div style={styles.features}>
-                        <div style={styles.feature}>
-                            <h3 style={styles.featureTitle}>Minecraft</h3>
-                            <p style={styles.featureText}>Automatic skin sync</p>
-                        </div>
-                        <div style={styles.feature}>
-                            <h3 style={styles.featureTitle}>ELO Stats</h3>
-                            <p style={styles.featureText}>Peak and current rating</p>
-                        </div>
-                        <div style={styles.feature}>
-                            <h3 style={styles.featureTitle}>Location</h3>
-                            <p style={styles.featureText}>Geo-detection</p>
-                        </div>
+                {/* Features */}
+                <div className="w-full grid grid-cols-3 gap-4 text-center">
+                    <div className="p-4">
+                        <h3 className="text-xs font-semibold text-zinc-100 mb-1">Minecraft</h3>
+                        <p className="text-xs text-zinc-500">Auto sync</p>
+                    </div>
+                    <div className="p-4">
+                        <h3 className="text-xs font-semibold text-zinc-100 mb-1">ELO Stats</h3>
+                        <p className="text-xs text-zinc-500">Live tracking</p>
+                    </div>
+                    <div className="p-4">
+                        <h3 className="text-xs font-semibold text-zinc-100 mb-1">Location</h3>
+                        <p className="text-xs text-zinc-500">Auto-detect</p>
                     </div>
                 </div>
+
             </div>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        minHeight: '100vh',
-        backgroundColor: '#f8f9fa',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '40px 20px',
-    },
-    loadingContainer: {
-        minHeight: '100vh',
-        backgroundColor: '#f8f9fa',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    spinner: {
-        width: '40px',
-        height: '40px',
-        border: '3px solid #e9ecef',
-        borderTop: '3px solid #0d47a1',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-    },
-    content: {
-        maxWidth: '680px',
-        width: '100%',
-    },
-    header: {
-        textAlign: 'center',
-        marginBottom: '80px',
-        paddingTop: '60px',
-    },
-    title: {
-        fontSize: '48px',
-        fontWeight: '800',
-        color: '#0d47a1',
-        margin: 0,
-        letterSpacing: '0px',
-    },
-    subtitle: {
-        fontSize: '14px',
-        fontWeight: '500',
-        color: '#6c757d',
-        margin: '8px 0 0 0',
-        letterSpacing: '0.5px',
-    },
-    main: {
-        textAlign: 'center',
-    },
-    heading: {
-        fontSize: '32px',
-        fontWeight: '700',
-        color: '#212529',
-        margin: '0 0 16px 0',
-    },
-    description: {
-        fontSize: '16px',
-        color: '#6c757d',
-        lineHeight: '1.6',
-        margin: '0 0 40px 0',
-        maxWidth: '480px',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-    },
-    button: {
-        backgroundColor: '#0d47a1',
-        color: '#ffffff',
-        border: 'none',
-        borderRadius: '8px',
-        padding: '16px 32px',
-        fontSize: '15px',
-        fontWeight: '600',
-        cursor: 'pointer',
-        transition: 'background-color 0.2s ease',
-        marginBottom: '60px',
-    },
-    features: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-        gap: '24px',
-        marginTop: '60px',
-    },
-    feature: {
-        textAlign: 'center',
-        padding: '24px',
-    },
-    featureTitle: {
-        fontSize: '16px',
-        fontWeight: '700',
-        color: '#212529',
-        margin: '0 0 8px 0',
-    },
-    featureText: {
-        fontSize: '14px',
-        color: '#6c757d',
-        margin: 0,
-        lineHeight: '1.5',
-    },
-};
