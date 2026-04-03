@@ -9,11 +9,9 @@ export default function Setup() {
     const [discordData, setDiscordData] = useState(null);
 
     useEffect(() => {
-        // Get Discord data from URL params
         const { discord_id, discord_username, avatar } = router.query;
 
         if (!discord_id) {
-            // Redirect to Discord OAuth if no data
             window.location.href = process.env.NEXT_PUBLIC_DISCORD_OAUTH_URL;
             return;
         }
@@ -49,7 +47,6 @@ export default function Setup() {
                 throw new Error(data.error || 'Failed to create profile');
             }
 
-            // Success! Redirect to success page
             router.push('/success');
 
         } catch (err) {
@@ -62,67 +59,95 @@ export default function Setup() {
     if (!discordData) {
         return (
             <div style={styles.container}>
-                <p>Redirecting to Discord...</p>
+                <div style={styles.loadingText}>Redirecting to Discord...</div>
             </div>
         );
     }
 
     return (
         <div style={styles.container}>
-            <div style={styles.card}>
-                <h1 style={styles.title}>Setup Your Profile</h1>
-
-                <div style={styles.discordInfo}>
-                    {discordData.avatar && (
-                        <img
-                            src={`https://cdn.discordapp.com/avatars/${discordData.discord_id}/${discordData.avatar}.png?size=128`}
-                            alt="Discord Avatar"
-                            style={styles.avatar}
-                        />
-                    )}
-                    <p style={styles.username}>{discordData.discord_username}</p>
+            <div style={styles.content}>
+                {/* Header */}
+                <div style={styles.header}>
+                    <h1 style={styles.logo}>MIRA</h1>
+                    <p style={styles.subtitle}>PROFILE SYSTEM</p>
                 </div>
 
-                <form onSubmit={handleSubmit} style={styles.form}>
-                    <label style={styles.label}>
-                        Minecraft Username
-                        <input
-                            type="text"
-                            value={minecraftUsername}
-                            onChange={(e) => setMinecraftUsername(e.target.value)}
-                            placeholder="Enter your Minecraft username"
-                            required
-                            style={styles.input}
-                        />
-                    </label>
+                {/* Main Card */}
+                <div style={styles.card}>
+                    <div style={styles.cardHeader}>
+                        <h2 style={styles.cardTitle}>Setup Profile</h2>
+                        <p style={styles.cardSubtitle}>Configure your Minecraft profile information</p>
+                    </div>
 
-                    {error && (
-                        <div style={styles.error}>
-                            {error}
+                    {/* Discord Info */}
+                    <div style={styles.discordSection}>
+                        <div style={styles.discordInfo}>
+                            {discordData.avatar && (
+                                <img
+                                    src={`https://cdn.discordapp.com/avatars/${discordData.discord_id}/${discordData.avatar}.png?size=128`}
+                                    alt="Discord Avatar"
+                                    style={styles.avatar}
+                                />
+                            )}
+                            <div style={styles.discordDetails}>
+                                <div style={styles.discordLabel}>Connected Account</div>
+                                <div style={styles.discordUsername}>{discordData.discord_username}</div>
+                            </div>
                         </div>
-                    )}
+                    </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        style={{
-                            ...styles.button,
-                            ...(loading ? styles.buttonDisabled : {})
-                        }}
-                    >
-                        {loading ? 'Creating Profile...' : 'Create Profile'}
-                    </button>
-                </form>
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} style={styles.form}>
+                        <div style={styles.formGroup}>
+                            <label style={styles.label}>MINECRAFT USERNAME</label>
+                            <input
+                                type="text"
+                                value={minecraftUsername}
+                                onChange={(e) => setMinecraftUsername(e.target.value)}
+                                placeholder="Enter your Minecraft username"
+                                required
+                                style={styles.input}
+                            />
+                        </div>
 
-                <div style={styles.info}>
-                    <p style={styles.infoText}>
-                        We'll automatically fetch:
-                    </p>
-                    <ul style={styles.list}>
-                        <li>Your Minecraft skin</li>
-                        <li>Your Minemen Club ELO</li>
-                        <li>Your location (City, State, Country)</li>
-                    </ul>
+                        {error && (
+                            <div style={styles.error}>
+                                <span style={styles.errorIcon}>⚠</span>
+                                {error}
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            style={{
+                                ...styles.button,
+                                ...(loading ? styles.buttonDisabled : {})
+                            }}
+                        >
+                            {loading ? 'CREATING PROFILE...' : 'CREATE PROFILE'}
+                        </button>
+                    </form>
+
+                    {/* Info Section */}
+                    <div style={styles.infoSection}>
+                        <div style={styles.infoTitle}>AUTOMATICALLY DETECTED</div>
+                        <div style={styles.infoGrid}>
+                            <div style={styles.infoItem}>
+                                <div style={styles.infoIcon}>🎮</div>
+                                <div style={styles.infoText}>Minecraft Skin</div>
+                            </div>
+                            <div style={styles.infoItem}>
+                                <div style={styles.infoIcon}>⚔️</div>
+                                <div style={styles.infoText}>Minemen Club ELO</div>
+                            </div>
+                            <div style={styles.infoItem}>
+                                <div style={styles.infoIcon}>🌍</div>
+                                <div style={styles.infoText}>Location Data</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,103 +157,192 @@ export default function Setup() {
 const styles = {
     container: {
         minHeight: '100vh',
+        backgroundColor: '#0a0a0a',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        padding: '40px 20px',
         display: 'flex',
-        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#2b2d31',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        padding: '20px'
+        alignItems: 'center'
+    },
+    content: {
+        maxWidth: '700px',
+        width: '100%'
+    },
+    loadingText: {
+        color: '#666',
+        fontSize: '14px',
+        letterSpacing: '0.5px'
+    },
+    header: {
+        textAlign: 'center',
+        marginBottom: '48px'
+    },
+    logo: {
+        fontSize: '48px',
+        fontWeight: '800',
+        color: '#ffffff',
+        letterSpacing: '8px',
+        margin: 0,
+        marginBottom: '8px',
+        textShadow: '0 0 40px rgba(255,255,255,0.1)'
+    },
+    subtitle: {
+        fontSize: '11px',
+        fontWeight: '600',
+        color: '#666',
+        letterSpacing: '4px',
+        margin: 0,
+        textTransform: 'uppercase'
     },
     card: {
-        backgroundColor: '#393A41',
-        borderRadius: '8px',
-        padding: '40px',
-        maxWidth: '500px',
-        width: '100%',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+        backgroundColor: '#141414',
+        border: '1px solid #1f1f1f',
+        borderRadius: '2px',
+        overflow: 'hidden'
     },
-    title: {
-        color: '#fff',
-        marginBottom: '24px',
-        fontSize: '28px',
-        textAlign: 'center'
+    cardHeader: {
+        padding: '32px 40px',
+        borderBottom: '1px solid #1f1f1f'
+    },
+    cardTitle: {
+        fontSize: '20px',
+        fontWeight: '600',
+        color: '#ffffff',
+        margin: 0,
+        marginBottom: '8px',
+        letterSpacing: '0.5px'
+    },
+    cardSubtitle: {
+        fontSize: '13px',
+        color: '#888',
+        margin: 0,
+        lineHeight: '1.6'
+    },
+    discordSection: {
+        padding: '32px 40px',
+        borderBottom: '1px solid #1f1f1f'
     },
     discordInfo: {
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
-        marginBottom: '32px'
-    },
-    avatar: {
-        width: '80px',
-        height: '80px',
-        borderRadius: '50%',
-        marginBottom: '12px'
-    },
-    username: {
-        color: '#fff',
-        fontSize: '18px',
-        margin: 0
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
         gap: '20px'
     },
-    label: {
-        color: '#b5bac1',
-        fontSize: '14px',
+    avatar: {
+        width: '64px',
+        height: '64px',
+        borderRadius: '50%',
+        border: '2px solid #1f1f1f'
+    },
+    discordDetails: {
+        flex: 1
+    },
+    discordLabel: {
+        fontSize: '11px',
         fontWeight: '600',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px'
+        color: '#666',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        marginBottom: '6px'
+    },
+    discordUsername: {
+        fontSize: '16px',
+        fontWeight: '600',
+        color: '#ffffff',
+        letterSpacing: '0.3px'
+    },
+    form: {
+        padding: '40px'
+    },
+    formGroup: {
+        marginBottom: '24px'
+    },
+    label: {
+        display: 'block',
+        fontSize: '11px',
+        fontWeight: '600',
+        color: '#888',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        marginBottom: '12px'
     },
     input: {
-        backgroundColor: '#1e1f22',
-        border: 'none',
-        borderRadius: '4px',
-        padding: '12px',
-        color: '#fff',
-        fontSize: '16px',
-        outline: 'none'
+        width: '100%',
+        backgroundColor: '#0a0a0a',
+        border: '1px solid #1f1f1f',
+        borderRadius: '2px',
+        padding: '14px 16px',
+        color: '#ffffff',
+        fontSize: '14px',
+        outline: 'none',
+        transition: 'border-color 0.2s ease',
+        fontFamily: 'inherit',
+        boxSizing: 'border-box'
     },
     button: {
+        width: '100%',
         backgroundColor: '#5865f2',
-        color: '#fff',
+        color: '#ffffff',
         border: 'none',
-        borderRadius: '4px',
-        padding: '12px 24px',
-        fontSize: '16px',
-        fontWeight: '600',
+        borderRadius: '2px',
+        padding: '16px 32px',
+        fontSize: '12px',
+        fontWeight: '700',
+        letterSpacing: '1px',
         cursor: 'pointer',
-        transition: 'background-color 0.2s'
+        transition: 'all 0.2s ease',
+        textTransform: 'uppercase',
+        boxShadow: '0 4px 12px rgba(88, 101, 242, 0.3)',
+        marginTop: '8px'
     },
     buttonDisabled: {
         backgroundColor: '#4752c4',
-        cursor: 'not-allowed'
+        cursor: 'not-allowed',
+        opacity: 0.7
     },
     error: {
-        backgroundColor: '#ed4245',
-        color: '#fff',
-        padding: '12px',
-        borderRadius: '4px',
-        fontSize: '14px'
+        backgroundColor: '#2a1515',
+        border: '1px solid #3d1f1f',
+        color: '#ff6b6b',
+        padding: '14px 16px',
+        borderRadius: '2px',
+        fontSize: '13px',
+        marginBottom: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px'
     },
-    info: {
-        marginTop: '32px',
-        padding: '16px',
-        backgroundColor: '#2b2d31',
-        borderRadius: '4px'
+    errorIcon: {
+        fontSize: '16px'
+    },
+    infoSection: {
+        padding: '32px 40px',
+        backgroundColor: '#0a0a0a',
+        borderTop: '1px solid #1f1f1f'
+    },
+    infoTitle: {
+        fontSize: '11px',
+        fontWeight: '600',
+        color: '#666',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        marginBottom: '20px'
+    },
+    infoGrid: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gap: '16px'
+    },
+    infoItem: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px'
+    },
+    infoIcon: {
+        fontSize: '20px'
     },
     infoText: {
-        color: '#b5bac1',
-        fontSize: '14px',
-        margin: '0 0 8px 0'
-    },
-    list: {
-        color: '#b5bac1',
-        fontSize: '14px',
-        margin: '0',
-        paddingLeft: '20px'
+        fontSize: '13px',
+        color: '#888',
+        letterSpacing: '0.3px'
     }
 };
