@@ -24,13 +24,17 @@ export default async function handler(req, res) {
 
         // Store user data in session/cookie and redirect to setup page
         // For simplicity, we'll use URL params (in production, use secure cookies)
+        const username = user.discriminator && user.discriminator !== '0'
+            ? `${user.username}#${user.discriminator}`
+            : user.username;
+
         const params = new URLSearchParams({
             discord_id: user.id,
-            discord_username: `${user.username}#${user.discriminator}`,
-            avatar: user.avatar
+            discord_username: username,
+            avatar: user.avatar || ''
         });
 
-        res.redirect(`/setup?${params.toString()}`);
+        return res.redirect(307, `/setup?${params.toString()}`);
     } catch (error) {
         console.error('OAuth callback error:', error);
         res.status(500).json({ error: 'Authentication failed' });
