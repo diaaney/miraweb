@@ -8,7 +8,6 @@ export default function Products() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Check if user is logged in
         const userData = localStorage.getItem('mira_user');
         if (!userData) {
             router.push('/');
@@ -26,7 +25,7 @@ export default function Products() {
     if (isLoading) {
         return (
             <div style={styles.loadingContainer}>
-                <div style={styles.loadingSpinner}></div>
+                <div style={styles.spinner}></div>
             </div>
         );
     }
@@ -36,29 +35,16 @@ export default function Products() {
     return (
         <Layout user={user} onLogout={handleLogout}>
             <div style={styles.container}>
-                <div style={styles.comingSoonCard}>
-                    <div style={styles.iconContainer}>
-                        <span style={styles.icon}>🛍️</span>
-                    </div>
+                <div style={styles.header}>
                     <h1 style={styles.title}>Products</h1>
-                    <div style={styles.badge}>COMING SOON</div>
-                    <p style={styles.description}>
-                        We're working on something amazing. Premium products and features will be available here soon.
+                    <p style={styles.subtitle}>Premium features and items</p>
+                </div>
+
+                <div style={styles.comingSoon}>
+                    <div style={styles.badge}>Coming Soon</div>
+                    <p style={styles.message}>
+                        We're working on bringing you exclusive products and premium features.
                     </p>
-                    <div style={styles.features}>
-                        <div style={styles.featureItem}>
-                            <span style={styles.featureIcon}>✨</span>
-                            <span style={styles.featureText}>Exclusive Items</span>
-                        </div>
-                        <div style={styles.featureItem}>
-                            <span style={styles.featureIcon}>🎁</span>
-                            <span style={styles.featureText}>Special Perks</span>
-                        </div>
-                        <div style={styles.featureItem}>
-                            <span style={styles.featureIcon}>🚀</span>
-                            <span style={styles.featureText}>Early Access</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </Layout>
@@ -68,90 +54,59 @@ export default function Products() {
 const styles = {
     loadingContainer: {
         minHeight: '100vh',
-        backgroundColor: '#0a0e27',
+        backgroundColor: '#f8f9fa',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    loadingSpinner: {
+    spinner: {
         width: '40px',
         height: '40px',
-        border: '3px solid #1a2142',
-        borderTop: '3px solid #5865f2',
+        border: '3px solid #e9ecef',
+        borderTop: '3px solid #0d47a1',
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
     },
     container: {
-        maxWidth: '600px',
-        margin: '80px auto',
-        padding: '20px',
+        maxWidth: '680px',
     },
-    comingSoonCard: {
-        backgroundColor: '#0f1535',
-        border: '1px solid #1a2142',
-        borderRadius: '16px',
-        padding: '64px 48px',
-        textAlign: 'center',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-    },
-    iconContainer: {
-        marginBottom: '24px',
-    },
-    icon: {
-        fontSize: '64px',
-        display: 'inline-block',
-        animation: 'float 3s ease-in-out infinite',
+    header: {
+        marginBottom: '48px',
     },
     title: {
-        fontSize: '40px',
-        fontWeight: '800',
-        color: '#ffffff',
+        fontSize: '32px',
+        fontWeight: '700',
+        color: '#212529',
+        margin: '0 0 8px 0',
+    },
+    subtitle: {
+        fontSize: '16px',
+        color: '#6c757d',
         margin: 0,
-        marginBottom: '16px',
-        letterSpacing: '1px',
+    },
+    comingSoon: {
+        textAlign: 'center',
+        padding: '80px 40px',
     },
     badge: {
         display: 'inline-block',
-        backgroundColor: '#5865f2',
-        color: '#ffffff',
-        fontSize: '11px',
+        backgroundColor: '#e7f1ff',
+        color: '#0d47a1',
+        fontSize: '12px',
         fontWeight: '700',
-        padding: '6px 16px',
-        borderRadius: '8px',
-        letterSpacing: '1px',
-        marginBottom: '24px',
+        padding: '6px 12px',
+        borderRadius: '6px',
+        marginBottom: '16px',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
     },
-    description: {
-        fontSize: '15px',
-        color: '#8b92b8',
-        lineHeight: '1.8',
-        marginBottom: '40px',
+    message: {
+        fontSize: '16px',
+        color: '#6c757d',
+        lineHeight: '1.6',
+        margin: 0,
         maxWidth: '400px',
-        margin: '0 auto 40px',
-    },
-    features: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-        maxWidth: '300px',
-        margin: '0 auto',
-    },
-    featureItem: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        padding: '16px',
-        backgroundColor: '#0a0e27',
-        border: '1px solid #1a2142',
-        borderRadius: '12px',
-    },
-    featureIcon: {
-        fontSize: '20px',
-    },
-    featureText: {
-        fontSize: '14px',
-        color: '#ffffff',
-        fontWeight: '500',
-        letterSpacing: '0.3px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
 };

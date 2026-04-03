@@ -9,7 +9,6 @@ export default function Setup() {
     const [discordData, setDiscordData] = useState(null);
 
     useEffect(() => {
-        // Wait for router to be ready before checking query params
         if (!router.isReady) return;
 
         const { discord_id, discord_username, avatar } = router.query;
@@ -52,9 +51,7 @@ export default function Setup() {
                 throw new Error(data.error || 'Failed to create profile');
             }
 
-            // Save user data to localStorage for persistent login
             localStorage.setItem('mira_user', JSON.stringify(data.profile));
-
             router.push('/dashboard');
 
         } catch (err) {
@@ -66,8 +63,8 @@ export default function Setup() {
 
     if (!discordData) {
         return (
-            <div style={styles.container}>
-                <div style={styles.loadingText}>Redirecting to Discord...</div>
+            <div style={styles.loadingContainer}>
+                <div style={styles.spinner}></div>
             </div>
         );
     }
@@ -75,40 +72,34 @@ export default function Setup() {
     return (
         <div style={styles.container}>
             <div style={styles.content}>
-                {/* Header */}
                 <div style={styles.header}>
-                    <h1 style={styles.logo}>MIRA</h1>
-                    <p style={styles.subtitle}>PROFILE SYSTEM</p>
+                    <h1 style={styles.title}>MIRA</h1>
+                    <p style={styles.subtitle}>Profile System</p>
                 </div>
 
-                {/* Main Card */}
-                <div style={styles.card}>
-                    <div style={styles.cardHeader}>
-                        <h2 style={styles.cardTitle}>Setup Profile</h2>
-                        <p style={styles.cardSubtitle}>Configure your Minecraft profile information</p>
-                    </div>
+                <div style={styles.main}>
+                    <h2 style={styles.heading}>Setup Profile</h2>
+                    <p style={styles.description}>
+                        Configure your Minecraft profile information
+                    </p>
 
-                    {/* Discord Info */}
-                    <div style={styles.discordSection}>
-                        <div style={styles.discordInfo}>
-                            {discordData.avatar && (
-                                <img
-                                    src={`https://cdn.discordapp.com/avatars/${discordData.discord_id}/${discordData.avatar}.png?size=128`}
-                                    alt="Discord Avatar"
-                                    style={styles.avatar}
-                                />
-                            )}
-                            <div style={styles.discordDetails}>
-                                <div style={styles.discordLabel}>Connected Account</div>
-                                <div style={styles.discordUsername}>{discordData.discord_username}</div>
+                    {discordData.avatar && (
+                        <div style={styles.discordSection}>
+                            <img
+                                src={`https://cdn.discordapp.com/avatars/${discordData.discord_id}/${discordData.avatar}.png?size=128`}
+                                alt="Discord Avatar"
+                                style={styles.avatar}
+                            />
+                            <div>
+                                <p style={styles.label}>Connected Account</p>
+                                <p style={styles.discordName}>{discordData.discord_username}</p>
                             </div>
                         </div>
-                    </div>
+                    )}
 
-                    {/* Form */}
                     <form onSubmit={handleSubmit} style={styles.form}>
                         <div style={styles.formGroup}>
-                            <label style={styles.label}>MINECRAFT USERNAME</label>
+                            <label style={styles.inputLabel}>Minecraft Username</label>
                             <input
                                 type="text"
                                 value={minecraftUsername}
@@ -120,10 +111,7 @@ export default function Setup() {
                         </div>
 
                         {error && (
-                            <div style={styles.error}>
-                                <span style={styles.errorIcon}>⚠</span>
-                                {error}
-                            </div>
+                            <div style={styles.error}>{error}</div>
                         )}
 
                         <button
@@ -134,26 +122,18 @@ export default function Setup() {
                                 ...(loading ? styles.buttonDisabled : {})
                             }}
                         >
-                            {loading ? 'CREATING PROFILE...' : 'CREATE PROFILE'}
+                            {loading ? 'Creating Profile...' : 'Create Profile'}
                         </button>
                     </form>
 
-                    {/* Info Section */}
-                    <div style={styles.infoSection}>
-                        <div style={styles.infoTitle}>AUTOMATICALLY DETECTED</div>
-                        <div style={styles.infoGrid}>
-                            <div style={styles.infoItem}>
-                                <div style={styles.infoIcon}>🎮</div>
-                                <div style={styles.infoText}>Minecraft Skin</div>
-                            </div>
-                            <div style={styles.infoItem}>
-                                <div style={styles.infoIcon}>⚔️</div>
-                                <div style={styles.infoText}>Minemen Club ELO</div>
-                            </div>
-                            <div style={styles.infoItem}>
-                                <div style={styles.infoIcon}>🌍</div>
-                                <div style={styles.infoText}>Location Data</div>
-                            </div>
+                    <div style={styles.features}>
+                        <p style={styles.featuresTitle}>Automatically Detected</p>
+                        <div style={styles.featuresList}>
+                            <span style={styles.featureItem}>Minecraft Skin</span>
+                            <span style={styles.featureDot}>•</span>
+                            <span style={styles.featureItem}>Minemen Club ELO</span>
+                            <span style={styles.featureDot}>•</span>
+                            <span style={styles.featureItem}>Location Data</span>
                         </div>
                     </div>
                 </div>
@@ -165,193 +145,168 @@ export default function Setup() {
 const styles = {
     container: {
         minHeight: '100vh',
-        backgroundColor: '#0a0e27',
+        backgroundColor: '#f8f9fa',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        padding: '40px 20px',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        padding: '40px 20px',
+    },
+    loadingContainer: {
+        minHeight: '100vh',
+        backgroundColor: '#f8f9fa',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    spinner: {
+        width: '40px',
+        height: '40px',
+        border: '3px solid #e9ecef',
+        borderTop: '3px solid #0d47a1',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
     },
     content: {
-        maxWidth: '700px',
-        width: '100%'
-    },
-    loadingText: {
-        color: '#8b92b8',
-        fontSize: '14px',
-        letterSpacing: '0.5px'
+        maxWidth: '560px',
+        width: '100%',
     },
     header: {
         textAlign: 'center',
-        marginBottom: '48px'
+        marginBottom: '60px',
+        paddingTop: '60px',
     },
-    logo: {
+    title: {
         fontSize: '48px',
         fontWeight: '800',
-        color: '#ffffff',
-        letterSpacing: '8px',
+        color: '#0d47a1',
         margin: 0,
-        marginBottom: '8px',
-        textShadow: '0 0 40px rgba(255,255,255,0.1)'
     },
     subtitle: {
-        fontSize: '11px',
+        fontSize: '14px',
+        fontWeight: '500',
+        color: '#6c757d',
+        margin: '8px 0 0 0',
+        letterSpacing: '0.5px',
+    },
+    main: {
+        textAlign: 'center',
+    },
+    heading: {
+        fontSize: '28px',
         fontWeight: '700',
-        color: '#5865f2',
-        letterSpacing: '4px',
-        margin: 0,
-        textTransform: 'uppercase'
+        color: '#212529',
+        margin: '0 0 12px 0',
     },
-    card: {
-        backgroundColor: '#0f1535',
-        border: '1px solid #1a2142',
-        borderRadius: '16px',
-        overflow: 'hidden',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
-    },
-    cardHeader: {
-        padding: '32px 40px',
-        borderBottom: '1px solid #1a2142'
-    },
-    cardTitle: {
-        fontSize: '20px',
-        fontWeight: '600',
-        color: '#ffffff',
-        margin: 0,
-        marginBottom: '8px',
-        letterSpacing: '0.5px'
-    },
-    cardSubtitle: {
-        fontSize: '13px',
-        color: '#8b92b8',
-        margin: 0,
-        lineHeight: '1.6'
+    description: {
+        fontSize: '16px',
+        color: '#6c757d',
+        lineHeight: '1.6',
+        margin: '0 0 32px 0',
     },
     discordSection: {
-        padding: '32px 40px',
-        borderBottom: '1px solid #1a2142'
-    },
-    discordInfo: {
         display: 'flex',
         alignItems: 'center',
-        gap: '20px'
+        gap: '16px',
+        padding: '20px',
+        backgroundColor: '#ffffff',
+        border: '1px solid #dee2e6',
+        borderRadius: '8px',
+        marginBottom: '32px',
+        textAlign: 'left',
     },
     avatar: {
-        width: '64px',
-        height: '64px',
-        borderRadius: '12px',
-        border: '2px solid #1a2142'
-    },
-    discordDetails: {
-        flex: 1
-    },
-    discordLabel: {
-        fontSize: '11px',
-        fontWeight: '600',
-        color: '#8b92b8',
-        letterSpacing: '1px',
-        textTransform: 'uppercase',
-        marginBottom: '6px'
-    },
-    discordUsername: {
-        fontSize: '16px',
-        fontWeight: '600',
-        color: '#ffffff',
-        letterSpacing: '0.3px'
-    },
-    form: {
-        padding: '40px'
-    },
-    formGroup: {
-        marginBottom: '24px'
+        width: '56px',
+        height: '56px',
+        borderRadius: '8px',
     },
     label: {
-        display: 'block',
-        fontSize: '11px',
+        fontSize: '12px',
+        color: '#6c757d',
+        margin: '0 0 4px 0',
+        fontWeight: '500',
+    },
+    discordName: {
+        fontSize: '15px',
+        color: '#212529',
+        margin: 0,
         fontWeight: '600',
-        color: '#8b92b8',
-        letterSpacing: '1px',
-        textTransform: 'uppercase',
-        marginBottom: '12px'
+    },
+    form: {
+        marginBottom: '40px',
+    },
+    formGroup: {
+        marginBottom: '24px',
+        textAlign: 'left',
+    },
+    inputLabel: {
+        display: 'block',
+        fontSize: '13px',
+        fontWeight: '600',
+        color: '#212529',
+        marginBottom: '8px',
     },
     input: {
         width: '100%',
-        backgroundColor: '#0a0e27',
-        border: '1px solid #1a2142',
-        borderRadius: '10px',
-        padding: '14px 16px',
-        color: '#ffffff',
-        fontSize: '14px',
+        backgroundColor: '#ffffff',
+        border: '1px solid #dee2e6',
+        borderRadius: '8px',
+        padding: '12px 16px',
+        fontSize: '15px',
+        color: '#212529',
         outline: 'none',
         transition: 'border-color 0.2s ease',
         fontFamily: 'inherit',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
     },
     button: {
         width: '100%',
-        backgroundColor: '#5865f2',
+        backgroundColor: '#0d47a1',
         color: '#ffffff',
         border: 'none',
-        borderRadius: '10px',
+        borderRadius: '8px',
         padding: '14px 28px',
-        fontSize: '12px',
-        fontWeight: '700',
-        letterSpacing: '0.5px',
+        fontSize: '15px',
+        fontWeight: '600',
         cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        textTransform: 'uppercase',
-        boxShadow: '0 8px 24px rgba(88, 101, 242, 0.4)',
-        marginTop: '8px'
+        transition: 'background-color 0.2s ease',
     },
     buttonDisabled: {
-        backgroundColor: '#4752c4',
+        backgroundColor: '#6c9bcf',
         cursor: 'not-allowed',
-        opacity: 0.7
     },
     error: {
-        backgroundColor: '#2a1515',
-        border: '1px solid #3d1f1f',
-        color: '#ff6b6b',
-        padding: '14px 16px',
-        borderRadius: '2px',
-        fontSize: '13px',
-        marginBottom: '20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px'
+        backgroundColor: '#fee',
+        border: '1px solid #fcc',
+        color: '#c33',
+        padding: '12px',
+        borderRadius: '6px',
+        fontSize: '14px',
+        marginBottom: '16px',
     },
-    errorIcon: {
-        fontSize: '16px'
+    features: {
+        paddingTop: '32px',
+        borderTop: '1px solid #e9ecef',
     },
-    infoSection: {
-        padding: '32px 40px',
-        backgroundColor: '#0a0e27',
-        borderTop: '1px solid #1a2142'
-    },
-    infoTitle: {
-        fontSize: '11px',
+    featuresTitle: {
+        fontSize: '12px',
         fontWeight: '600',
-        color: '#8b92b8',
-        letterSpacing: '1px',
+        color: '#6c757d',
+        margin: '0 0 12px 0',
         textTransform: 'uppercase',
-        marginBottom: '20px'
+        letterSpacing: '0.5px',
     },
-    infoGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: '16px'
-    },
-    infoItem: {
+    featuresList: {
         display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
-        gap: '12px'
+        gap: '8px',
+        flexWrap: 'wrap',
     },
-    infoIcon: {
-        fontSize: '20px'
+    featureItem: {
+        fontSize: '14px',
+        color: '#495057',
     },
-    infoText: {
-        fontSize: '13px',
-        color: '#8b92b8',
-        letterSpacing: '0.3px'
-    }
+    featureDot: {
+        color: '#dee2e6',
+    },
 };
