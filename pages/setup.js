@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { User, Gamepad2 } from 'lucide-react';
 
 export default function Setup() {
     const router = useRouter();
@@ -63,250 +64,84 @@ export default function Setup() {
 
     if (!discordData) {
         return (
-            <div style={styles.loadingContainer}>
-                <div style={styles.spinner}></div>
+            <div className="min-h-screen bg-[#111111] flex items-center justify-center">
+                <div className="w-10 h-10 border-2 border-[#2a2a2a] border-t-zinc-500 rounded-full animate-spin"></div>
             </div>
         );
     }
 
     return (
-        <div style={styles.container}>
-            <div style={styles.content}>
-                <div style={styles.header}>
-                    <h1 style={styles.title}>MIRA</h1>
-                    <p style={styles.subtitle}>Profile System</p>
-                </div>
+        <div className="min-h-screen bg-[#111111] text-zinc-300 font-sans flex items-center justify-center px-8 selection:bg-zinc-800 selection:text-white">
+            <div className="w-full max-w-[500px] flex flex-col items-center text-center">
 
-                <div style={styles.main}>
-                    <h2 style={styles.heading}>Setup Profile</h2>
-                    <p style={styles.description}>
+                {/* Logo */}
+                <h1 className="font-serif text-6xl font-bold text-zinc-100 mb-4 tracking-tight">
+                    MIRA
+                </h1>
+                <p className="text-sm text-zinc-500 mb-12 tracking-wider font-medium">
+                    PROFILE SYSTEM
+                </p>
+
+                {/* Main Box */}
+                <div className="w-full rounded-2xl border border-[#2a2a2a] bg-[#161616] p-10 shadow-lg shadow-black/40 mb-4">
+                    <h2 className="font-serif text-2xl text-zinc-100 mb-2">Setup Profile</h2>
+                    <p className="text-sm text-zinc-400 leading-relaxed mb-8">
                         Configure your Minecraft profile information
                     </p>
 
+                    {/* Discord Account */}
                     {discordData.avatar && (
-                        <div style={styles.discordSection}>
+                        <div className="flex items-center gap-4 p-4 mb-6 bg-[#111111] rounded-lg border border-[#2a2a2a]">
                             <img
                                 src={`https://cdn.discordapp.com/avatars/${discordData.discord_id}/${discordData.avatar}.png?size=128`}
                                 alt="Discord Avatar"
-                                style={styles.avatar}
+                                className="w-12 h-12 rounded-lg"
                             />
-                            <div>
-                                <p style={styles.label}>Connected Account</p>
-                                <p style={styles.discordName}>{discordData.discord_username}</p>
+                            <div className="text-left flex-1">
+                                <p className="text-xs text-zinc-500 mb-1">Connected Account</p>
+                                <p className="text-sm text-zinc-100 font-medium">{discordData.discord_username}</p>
                             </div>
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} style={styles.form}>
-                        <div style={styles.formGroup}>
-                            <label style={styles.inputLabel}>Minecraft Username</label>
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="text-left">
+                            <label className="block text-xs font-semibold text-zinc-400 mb-2 uppercase tracking-wider">
+                                Minecraft Username
+                            </label>
                             <input
                                 type="text"
                                 value={minecraftUsername}
                                 onChange={(e) => setMinecraftUsername(e.target.value)}
-                                placeholder="Enter your Minecraft username"
+                                placeholder="Enter your username"
                                 required
-                                style={styles.input}
+                                className="w-full bg-[#111111] border border-[#2a2a2a] rounded-lg px-4 py-3 text-zinc-100 text-sm focus:outline-none focus:border-[#404040] transition-colors"
                             />
                         </div>
 
                         {error && (
-                            <div style={styles.error}>{error}</div>
+                            <div className="p-3 bg-red-950/20 border border-red-900/50 rounded-lg text-red-400 text-sm">
+                                {error}
+                            </div>
                         )}
 
                         <button
                             type="submit"
                             disabled={loading}
-                            style={{
-                                ...styles.button,
-                                ...(loading ? styles.buttonDisabled : {})
-                            }}
+                            className="w-full bg-[#2a2a2a] hover:bg-[#333333] disabled:bg-[#1a1a1a] disabled:text-zinc-600 text-zinc-100 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                         >
                             {loading ? 'Creating Profile...' : 'Create Profile'}
                         </button>
                     </form>
-
-                    <div style={styles.features}>
-                        <p style={styles.featuresTitle}>Automatically Detected</p>
-                        <div style={styles.featuresList}>
-                            <span style={styles.featureItem}>Minecraft Skin</span>
-                            <span style={styles.featureDot}>•</span>
-                            <span style={styles.featureItem}>Minemen Club ELO</span>
-                            <span style={styles.featureDot}>•</span>
-                            <span style={styles.featureItem}>Location Data</span>
-                        </div>
-                    </div>
                 </div>
+
+                {/* Auto Detection Info */}
+                <div className="text-xs text-zinc-500 tracking-wide">
+                    <span className="text-zinc-400">Auto-detected:</span> Skin • ELO • Location
+                </div>
+
             </div>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        minHeight: '100vh',
-        backgroundColor: '#f8f9fa',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '40px 20px',
-    },
-    loadingContainer: {
-        minHeight: '100vh',
-        backgroundColor: '#f8f9fa',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    spinner: {
-        width: '40px',
-        height: '40px',
-        border: '3px solid #e9ecef',
-        borderTop: '3px solid #0d47a1',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-    },
-    content: {
-        maxWidth: '560px',
-        width: '100%',
-    },
-    header: {
-        textAlign: 'center',
-        marginBottom: '60px',
-        paddingTop: '60px',
-    },
-    title: {
-        fontSize: '48px',
-        fontWeight: '800',
-        color: '#0d47a1',
-        margin: 0,
-    },
-    subtitle: {
-        fontSize: '14px',
-        fontWeight: '500',
-        color: '#6c757d',
-        margin: '8px 0 0 0',
-        letterSpacing: '0.5px',
-    },
-    main: {
-        textAlign: 'center',
-    },
-    heading: {
-        fontSize: '28px',
-        fontWeight: '700',
-        color: '#212529',
-        margin: '0 0 12px 0',
-    },
-    description: {
-        fontSize: '16px',
-        color: '#6c757d',
-        lineHeight: '1.6',
-        margin: '0 0 32px 0',
-    },
-    discordSection: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        padding: '20px',
-        backgroundColor: '#ffffff',
-        border: '1px solid #dee2e6',
-        borderRadius: '8px',
-        marginBottom: '32px',
-        textAlign: 'left',
-    },
-    avatar: {
-        width: '56px',
-        height: '56px',
-        borderRadius: '8px',
-    },
-    label: {
-        fontSize: '12px',
-        color: '#6c757d',
-        margin: '0 0 4px 0',
-        fontWeight: '500',
-    },
-    discordName: {
-        fontSize: '15px',
-        color: '#212529',
-        margin: 0,
-        fontWeight: '600',
-    },
-    form: {
-        marginBottom: '40px',
-    },
-    formGroup: {
-        marginBottom: '24px',
-        textAlign: 'left',
-    },
-    inputLabel: {
-        display: 'block',
-        fontSize: '13px',
-        fontWeight: '600',
-        color: '#212529',
-        marginBottom: '8px',
-    },
-    input: {
-        width: '100%',
-        backgroundColor: '#ffffff',
-        border: '1px solid #dee2e6',
-        borderRadius: '8px',
-        padding: '12px 16px',
-        fontSize: '15px',
-        color: '#212529',
-        outline: 'none',
-        transition: 'border-color 0.2s ease',
-        fontFamily: 'inherit',
-        boxSizing: 'border-box',
-    },
-    button: {
-        width: '100%',
-        backgroundColor: '#0d47a1',
-        color: '#ffffff',
-        border: 'none',
-        borderRadius: '8px',
-        padding: '14px 28px',
-        fontSize: '15px',
-        fontWeight: '600',
-        cursor: 'pointer',
-        transition: 'background-color 0.2s ease',
-    },
-    buttonDisabled: {
-        backgroundColor: '#6c9bcf',
-        cursor: 'not-allowed',
-    },
-    error: {
-        backgroundColor: '#fee',
-        border: '1px solid #fcc',
-        color: '#c33',
-        padding: '12px',
-        borderRadius: '6px',
-        fontSize: '14px',
-        marginBottom: '16px',
-    },
-    features: {
-        paddingTop: '32px',
-        borderTop: '1px solid #e9ecef',
-    },
-    featuresTitle: {
-        fontSize: '12px',
-        fontWeight: '600',
-        color: '#6c757d',
-        margin: '0 0 12px 0',
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px',
-    },
-    featuresList: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: '8px',
-        flexWrap: 'wrap',
-    },
-    featureItem: {
-        fontSize: '14px',
-        color: '#495057',
-    },
-    featureDot: {
-        color: '#dee2e6',
-    },
-};
