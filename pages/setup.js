@@ -9,6 +9,9 @@ export default function Setup() {
     const [discordData, setDiscordData] = useState(null);
 
     useEffect(() => {
+        // Wait for router to be ready before checking query params
+        if (!router.isReady) return;
+
         const { discord_id, discord_username, avatar } = router.query;
 
         if (!discord_id) {
@@ -23,7 +26,7 @@ export default function Setup() {
             discord_username,
             avatar
         });
-    }, [router.query]);
+    }, [router.isReady, router.query]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
