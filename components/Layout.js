@@ -1,46 +1,54 @@
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 export default function Layout({ children, user, onLogout }) {
     const router = useRouter();
-    const [currentPath, setCurrentPath] = useState('');
+    const currentPath = router.pathname;
 
-    useEffect(() => {
-        setCurrentPath(router.pathname);
-    }, [router.pathname]);
+    const getCountryFlag = (countryCode) => {
+        // Map country codes to Unicode flag representations
+        const flags = {
+            'US': '🇺🇸',
+            'MX': '🇲🇽',
+            'CA': '🇨🇦',
+            'GB': '🇬🇧',
+            'BR': '🇧🇷',
+            'AR': '🇦🇷',
+            'CL': '🇨🇱',
+            'CO': '🇨🇴',
+            'PE': '🇵🇪',
+            'VE': '🇻🇪',
+        };
+        return flags[countryCode] || countryCode;
+    };
 
     const menuItems = [
-        { name: 'Profile', path: '/dashboard', icon: '👤' },
-        { name: 'Products', path: '/products', icon: '🛍️', badge: 'SOON' }
+        { name: 'Profile', path: '/dashboard' },
+        { name: 'Products', path: '/products', badge: 'Soon' }
     ];
 
     return (
-        <div style={styles.container}>
-            {/* Top Bar with Location */}
-            {user && (
-                <div style={styles.topBar}>
-                    <div style={styles.locationContainer}>
-                        <span style={styles.locationIcon}>📍</span>
-                        <span style={styles.locationText}>
-                            {user.city}, {user.state} {user.country_emoji}
-                        </span>
+        <div style={styles.wrapper}>
+            {/* Top Bar */}
+            <div style={styles.topBar}>
+                <div style={styles.topBarContent}>
+                    <div style={styles.location}>
+                        {user.city}, {user.state} • {user.country}
                     </div>
-                    <div style={styles.topBarRight}>
+                    <div style={styles.topRight}>
                         <span style={styles.username}>{user.discord_username}</span>
-                        <button onClick={onLogout} style={styles.logoutButton}>
+                        <button onClick={onLogout} style={styles.logoutBtn}>
                             Logout
                         </button>
                     </div>
                 </div>
-            )}
+            </div>
 
-            <div style={styles.mainContainer}>
+            <div style={styles.container}>
                 {/* Sidebar */}
-                {user && (
-                    <div style={styles.sidebar}>
-                        <div style={styles.sidebarHeader}>
-                            <h1 style={styles.logo}>MIRA</h1>
-                            <p style={styles.logoSubtitle}>PREMIUM</p>
+                <aside style={styles.sidebar}>
+                    <div style={styles.sidebarContent}>
+                        <div style={styles.logo}>
+                            <h1 style={styles.logoText}>MIRA</h1>
                         </div>
 
                         <nav style={styles.nav}>
@@ -53,8 +61,7 @@ export default function Layout({ children, user, onLogout }) {
                                         ...(currentPath === item.path ? styles.navItemActive : {})
                                     }}
                                 >
-                                    <span style={styles.navIcon}>{item.icon}</span>
-                                    <span style={styles.navLabel}>{item.name}</span>
+                                    <span>{item.name}</span>
                                     {item.badge && (
                                         <span style={styles.badge}>{item.badge}</span>
                                     )}
@@ -62,158 +69,128 @@ export default function Layout({ children, user, onLogout }) {
                             ))}
                         </nav>
                     </div>
-                )}
+                </aside>
 
                 {/* Main Content */}
-                <div style={styles.content}>
+                <main style={styles.main}>
                     {children}
-                </div>
+                </main>
             </div>
         </div>
     );
 }
 
 const styles = {
-    container: {
+    wrapper: {
         minHeight: '100vh',
-        backgroundColor: '#0a0e27',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        backgroundColor: '#f8f9fa',
     },
     topBar: {
-        height: '50px',
-        backgroundColor: '#0f1535',
-        borderBottom: '1px solid #1a2142',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 24px',
+        height: '48px',
+        backgroundColor: '#ffffff',
+        borderBottom: '1px solid #e9ecef',
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 100,
     },
-    locationContainer: {
+    topBarContent: {
+        maxWidth: '1400px',
+        margin: '0 auto',
+        height: '100%',
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
+        justifyContent: 'space-between',
+        padding: '0 32px',
     },
-    locationIcon: {
-        fontSize: '14px',
-    },
-    locationText: {
+    location: {
         fontSize: '13px',
-        color: '#8b92b8',
+        color: '#6c757d',
         fontWeight: '500',
-        letterSpacing: '0.3px',
     },
-    topBarRight: {
+    topRight: {
         display: 'flex',
         alignItems: 'center',
         gap: '16px',
     },
     username: {
-        fontSize: '13px',
-        color: '#ffffff',
-        fontWeight: '500',
-    },
-    logoutButton: {
-        backgroundColor: 'transparent',
-        border: '1px solid #1a2142',
-        color: '#8b92b8',
-        padding: '6px 14px',
-        borderRadius: '8px',
-        fontSize: '11px',
+        fontSize: '14px',
+        color: '#212529',
         fontWeight: '600',
+    },
+    logoutBtn: {
+        backgroundColor: 'transparent',
+        border: '1px solid #dee2e6',
+        color: '#495057',
+        padding: '6px 12px',
+        borderRadius: '6px',
+        fontSize: '13px',
+        fontWeight: '500',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px',
     },
-    mainContainer: {
+    container: {
         display: 'flex',
-        paddingTop: '50px',
+        maxWidth: '1400px',
+        margin: '0 auto',
+        paddingTop: '48px',
     },
     sidebar: {
-        width: '240px',
-        backgroundColor: '#0f1535',
-        borderRight: '1px solid #1a2142',
-        minHeight: 'calc(100vh - 50px)',
-        position: 'fixed',
-        left: 0,
-        top: '50px',
-        padding: '32px 16px',
+        width: '220px',
+        padding: '40px 0',
+        position: 'sticky',
+        top: '48px',
+        height: 'calc(100vh - 48px)',
     },
-    sidebarHeader: {
-        textAlign: 'center',
-        marginBottom: '40px',
-        padding: '0 16px',
+    sidebarContent: {
+        padding: '0 32px',
     },
     logo: {
-        fontSize: '28px',
-        fontWeight: '800',
-        color: '#ffffff',
-        letterSpacing: '6px',
-        margin: 0,
-        marginBottom: '4px',
-        textShadow: '0 0 30px rgba(88, 101, 242, 0.3)',
+        marginBottom: '48px',
     },
-    logoSubtitle: {
-        fontSize: '9px',
-        fontWeight: '700',
-        color: '#5865f2',
-        letterSpacing: '3px',
+    logoText: {
+        fontSize: '24px',
+        fontWeight: '800',
+        color: '#0d47a1',
         margin: 0,
-        textTransform: 'uppercase',
     },
     nav: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '8px',
+        gap: '4px',
     },
     navItem: {
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
-        padding: '12px 16px',
+        justifyContent: 'space-between',
+        padding: '10px 12px',
         backgroundColor: 'transparent',
         border: 'none',
-        borderRadius: '12px',
-        color: '#8b92b8',
-        fontSize: '13px',
+        borderRadius: '6px',
+        color: '#6c757d',
+        fontSize: '14px',
         fontWeight: '500',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
         textAlign: 'left',
-        position: 'relative',
     },
     navItemActive: {
-        backgroundColor: '#1a2142',
-        color: '#ffffff',
-    },
-    navIcon: {
-        fontSize: '18px',
-        width: '20px',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    navLabel: {
-        flex: 1,
-        letterSpacing: '0.3px',
+        backgroundColor: '#e7f1ff',
+        color: '#0d47a1',
+        fontWeight: '600',
     },
     badge: {
-        backgroundColor: '#5865f2',
-        color: '#ffffff',
-        fontSize: '9px',
-        fontWeight: '700',
-        padding: '3px 8px',
-        borderRadius: '6px',
-        letterSpacing: '0.5px',
+        backgroundColor: '#e9ecef',
+        color: '#6c757d',
+        fontSize: '11px',
+        fontWeight: '600',
+        padding: '2px 8px',
+        borderRadius: '4px',
     },
-    content: {
+    main: {
         flex: 1,
-        marginLeft: '240px',
-        padding: '40px',
-        minHeight: 'calc(100vh - 50px)',
+        padding: '40px 32px',
+        maxWidth: '900px',
     },
 };
